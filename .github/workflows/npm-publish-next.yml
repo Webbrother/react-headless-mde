@@ -4,8 +4,11 @@
 name: Publish with @next
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - 'develop'
+#  release:
+#    types: [created]
 
 jobs:
   build-and-publish:

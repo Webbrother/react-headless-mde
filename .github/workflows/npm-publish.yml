@@ -4,8 +4,9 @@
 name: Publish
 
 on:
-  branches:
-    - 'main'
+  push:
+    branches:
+      - 'main'
 #  release:
 #    types: [created]
 

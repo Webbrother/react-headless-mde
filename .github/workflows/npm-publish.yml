@@ -4,8 +4,10 @@
 name: Publish
 
 on:
-  release:
-    types: [created]
+  branches:
+    - 'main'
+#  release:
+#    types: [created]
 
 jobs:
   build-and-publish:

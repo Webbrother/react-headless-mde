@@ -1,12 +1,14 @@
-import { SelectionRange, TextState } from '../types/CommandOptions';
-import { AlterLineFunction } from './listHelpers';
+import { type SelectionRange, type TextState } from '../types/CommandOptions';
+import { type AlterLineFunction } from './listHelpers';
 
 // A list of helpers for manipulating Markdown text.
-// These helpers do not interface with a textarea. For that, see
-export function getSurroundingWord(text: string, position: number): SelectionRange {
-  if (!text) throw Error("Argument 'text' should be truthy");
+// These helpers do not interface with a textarea.
 
-  const isWordDelimiter = (c: string) => c === ' ' || c.charCodeAt(0) === 10;
+// Check if symbol is "space" or "new line"
+const isWordDelimiter = (c: string): boolean => c === ' ' || c.charCodeAt(0) === 10;
+
+export function getSurroundingWord(text: string, position: number): SelectionRange {
+  if (text.length === 0) throw Error("Argument 'text' should be truthy");
 
   // leftIndex is initialized to 0 because if selection is 0, it won't even enter the iteration
   let start = 0;
@@ -34,13 +36,28 @@ export function getSurroundingWord(text: string, position: number): SelectionRan
 
 // If the cursor is inside a word and (selection.start === selection.end)
 // returns a new Selection where the whole word is selected
-// @param text
-// @param selection
 export function selectWord({ text, selection }: TextState): SelectionRange {
-  if (text && text.length && selection.start === selection.end) {
+  if (text.length !== 0 && selection.start === selection.end) {
     // the user is pointing to a word
     return getSurroundingWord(text, selection.start);
   }
+
+  return selection;
+}
+
+// If the cursor is inside a word (selection.start === selection.end) or there is a selection
+// returns a new Selection where (selection.start === selection.end) but the position is after word
+export function selectAfterWord({ text, selection }: TextState): SelectionRange {
+  if (text.length !== 0) {
+    // the user is pointing to a word
+    const { end } = getSurroundingWord(text, selection.end);
+
+    return {
+      start: end,
+      end,
+    };
+  }
+
   return selection;
 }
 
@@ -73,7 +90,7 @@ export function getBreaksNeededForEmptyLineBefore(text = '', startPosition: numb
 
 // Gets the number of line-breaks that would have to be inserted after the given 'startPosition'
 // to make sure there's an empty line between 'startPosition' and the next text
-export function getBreaksNeededForEmptyLineAfter(text = '', startPosition: number) {
+export function getBreaksNeededForEmptyLineAfter(text = '', startPosition: number): number {
   if (startPosition === text.length - 1) return 0;
 
   // rules:

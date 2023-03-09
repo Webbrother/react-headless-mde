@@ -68,7 +68,8 @@ You might want to take a look at [showdown-xss-filter](https://github.com/Vision
 
 React-mde-headless is [MIT licensed](https://github.com/andrerpena/react-mde/blob/master/LICENSE).
 
-## About the author
+## About the authors
 
-Made with :heart: by André Pena and [other awesome contributors](https://github.com/andrerpena).
+Created by [André Pena](https://github.com/andrerpena). Maintained and developed by https://github.com/webbrother.
+
 

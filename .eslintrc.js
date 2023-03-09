@@ -13,6 +13,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
+    project: ['./tsconfig.json'], // Specify it only for TypeScript files
   },
   plugins: ['react'],
   rules: {},

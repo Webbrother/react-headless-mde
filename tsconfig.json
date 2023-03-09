@@ -15,9 +15,10 @@
     "sourceMap": true,
     "outDir": "dist",
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true, // need for .eslintrc.js
   },
-  "files": [".eslintrc.js"],
+  "files": [".eslintrc.js"], // need to use eslint for .eslintrc.js because eslint uses tsconfig
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

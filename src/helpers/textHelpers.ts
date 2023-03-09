@@ -1,11 +1,8 @@
-import { SelectionRange } from '../types/SelectionRange';
-import { TextState } from '../types/CommandOptions';
+import { SelectionRange, TextState } from '../types/CommandOptions';
 import { AlterLineFunction } from './listHelpers';
 
-/**
- * A list of helpers for manipulating markdown text.
- * These helpers do not interface with a textarea. For that, see
- */
+// A list of helpers for manipulating Markdown text.
+// These helpers do not interface with a textarea. For that, see
 export function getSurroundingWord(text: string, position: number): SelectionRange {
   if (!text) throw Error("Argument 'text' should be truthy");
 
@@ -35,12 +32,10 @@ export function getSurroundingWord(text: string, position: number): SelectionRan
   return { start, end };
 }
 
-/**
- * If the cursor is inside a word and (selection.start === selection.end)
- * returns a new Selection where the whole word is selected
- * @param text
- * @param selection
- */
+// If the cursor is inside a word and (selection.start === selection.end)
+// returns a new Selection where the whole word is selected
+// @param text
+// @param selection
 export function selectWord({ text, selection }: TextState): SelectionRange {
   if (text && text.length && selection.start === selection.end) {
     // the user is pointing to a word
@@ -49,10 +44,8 @@ export function selectWord({ text, selection }: TextState): SelectionRange {
   return selection;
 }
 
-/**
- *  Gets the number of line-breaks that would have to be inserted before the given 'startPosition'
- *  to make sure there's an empty line between 'startPosition' and the previous text
- */
+// Gets the number of line-breaks that would have to be inserted before the given 'startPosition'
+// to make sure there's an empty line between 'startPosition' and the previous text
 export function getBreaksNeededForEmptyLineBefore(text = '', startPosition: number): number {
   if (startPosition === 0) return 0;
 
@@ -78,10 +71,8 @@ export function getBreaksNeededForEmptyLineBefore(text = '', startPosition: numb
   return isInFirstLine ? 0 : neededBreaks;
 }
 
-/**
- *  Gets the number of line-breaks that would have to be inserted after the given 'startPosition'
- *  to make sure there's an empty line between 'startPosition' and the next text
- */
+// Gets the number of line-breaks that would have to be inserted after the given 'startPosition'
+// to make sure there's an empty line between 'startPosition' and the next text
 export function getBreaksNeededForEmptyLineAfter(text = '', startPosition: number) {
   if (startPosition === text.length - 1) return 0;
 
@@ -118,9 +109,7 @@ export function getCharactersAfterSelection(textState: TextState, characters: nu
   return textState.text.slice(textState.selection.end, textState.selection.end + characters);
 }
 
-/**
- * Inserts insertionString before each line
- */
+// Inserts insertionString before each line
 export function insertBeforeEachLine(
   selectedText: string,
   insertBefore: string | AlterLineFunction,

@@ -1,6 +1,5 @@
-import { TextController, TextState } from '../types/CommandOptions';
+import { SelectionRange, TextController, TextState } from '../types/CommandOptions';
 import * as React from 'react';
-import { SelectionRange } from '../types/SelectionRange';
 
 export class TextAreaTextController implements TextController {
   textAreaRef: React.RefObject<HTMLTextAreaElement>;
@@ -148,11 +147,14 @@ function canManipulateViaTextNodes(input: HTMLTextAreaElement | HTMLInputElement
   if (input.nodeName !== 'TEXTAREA') {
     return false;
   }
+
   let browserSupportsTextareaTextNodes;
+
   if (typeof browserSupportsTextareaTextNodes === 'undefined') {
     const textarea = document.createElement('textarea');
     textarea.value = '1';
     browserSupportsTextareaTextNodes = !!textarea.firstChild;
   }
+
   return browserSupportsTextareaTextNodes;
 }

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Command } from '../command';
 import { getSelectedText, selectWord } from '../../helpers/textHelpers';
 

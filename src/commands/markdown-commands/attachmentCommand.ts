@@ -10,3 +10,18 @@
 Предусмотреть обработку ответа с бэка. Библиотека не знает ДТО ответа.
  */
 
+import { type Command } from '../command';
+import { selectAfterWord } from '../../helpers/textHelpers';
+
+export const attachmentCommand: Command = {
+  execute({ initialState, textApi }) {
+    // Replaces the current selection with the empty selection and sets the position after word
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const state1 = textApi.setSelectionRange(
+      selectAfterWord({
+        text: initialState.text,
+        selection: initialState.selection,
+      }),
+    );
+  },
+};

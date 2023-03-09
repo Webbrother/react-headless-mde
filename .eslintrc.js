@@ -1,4 +1,10 @@
 module.exports = {
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json'], // Specify it only for TypeScript files
+  },
   settings: {
     react: {
       version: 'detect',
@@ -10,11 +16,8 @@ module.exports = {
   },
   extends: ['plugin:react/recommended', 'standard-with-typescript', 'plugin:prettier/recommended'],
   overrides: [],
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json'], // Specify it only for TypeScript files
-  },
   plugins: ['react'],
-  rules: {},
+  rules: {
+    '@typescript-eslint/strict-boolean-expressions': 0,
+  },
 };

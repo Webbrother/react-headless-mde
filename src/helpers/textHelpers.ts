@@ -96,11 +96,14 @@ export function getBreaksNeededForEmptyLineAfter(text = '', startPosition: numbe
         return neededBreaks;
     }
   }
+
   return isInLastLine ? 0 : neededBreaks;
 }
+
 export function getSelectedText(textSection: TextState): string {
   return textSection.text.slice(textSection.selection.start, textSection.selection.end);
 }
+
 export function getCharactersBeforeSelection(textState: TextState, characters: number): string {
   return textState.text.slice(textState.selection.start - characters, textState.selection.start);
 }

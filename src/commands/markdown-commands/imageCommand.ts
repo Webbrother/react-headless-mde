@@ -1,4 +1,4 @@
-import { Command } from '../command';
+import { type Command } from '../command';
 import { getSelectedText, selectWord } from '../../helpers/textHelpers';
 
 export const imageCommand: Command = {
@@ -10,9 +10,12 @@ export const imageCommand: Command = {
         selection: initialState.selection,
       }),
     );
+
     // Replaces the current selection with the image
     const imageTemplate = getSelectedText(state1) || 'https://example.com/your-image.png';
+
     textApi.replaceSelection(`![](${imageTemplate})`);
+
     // Adjust the selection to not contain the **
     textApi.setSelectionRange({
       start: state1.selection.start + 4,

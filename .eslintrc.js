@@ -16,7 +16,7 @@ module.exports = {
   },
   extends: ['plugin:react/recommended', 'standard-with-typescript', 'plugin:prettier/recommended'],
   overrides: [],
-  plugins: ['react'],
+  plugins: ['react', 'import', 'simple-import-sort'],
   rules: {
     '@typescript-eslint/strict-boolean-expressions': 0,
   },

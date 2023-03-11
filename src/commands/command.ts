@@ -1,4 +1,4 @@
-import { TextController, TextState } from '../types/CommandOptions';
+import { type TextController, type TextState } from '../types/CommandOptions';
 
 export interface ExecuteOptions {
   initialState: TextState;
@@ -6,8 +6,8 @@ export interface ExecuteOptions {
 }
 
 export interface Command {
-  shouldUndo?: (options: Pick<ExecuteOptions, 'initialState'>) => boolean;
   execute: (options: ExecuteOptions) => void;
+  shouldUndo?: (options: Pick<ExecuteOptions, 'initialState'>) => boolean;
   undo?: (options: ExecuteOptions) => void;
 }
 

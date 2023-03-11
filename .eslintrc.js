@@ -19,5 +19,6 @@ module.exports = {
   plugins: ['react', 'import', 'simple-import-sort'],
   rules: {
     '@typescript-eslint/strict-boolean-expressions': 0,
+    '@typescript-eslint/explicit-function-return-type': 0,
   },
 };

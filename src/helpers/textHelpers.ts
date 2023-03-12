@@ -5,7 +5,9 @@ import { type AlterLineFunction } from './listHelpers';
 // These helpers do not interface with a textarea.
 
 // Check if symbol is "space" or "new line"
-const isWordDelimiter = (c: string): boolean => c === ' ' || c.charCodeAt(0) === 10;
+// c is optional because we pass a char by index,
+// and theoretically index can be outside the string range. See text[i - 1] and text[i].
+const isWordDelimiter = (c?: string): boolean => !!c && (c === ' ' || c.charCodeAt(0) === 10);
 
 export function getSurroundingWord(text: string, position: number): SelectionRange {
   if (text.length === 0) throw Error("Argument 'text' should be truthy");

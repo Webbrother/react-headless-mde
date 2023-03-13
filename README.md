@@ -18,10 +18,8 @@ export const MarkdownEditor = () => {
   const { ref } = useTextAreaMarkdownEditor();
 
   return (
-    <div className={'mb-4'}>
-      <div className={'mb-3 gap-1 flex flex-wrap'}>
-        <button onClick={bold}>B</button>
-      </div>
+    <div>
+      <button onClick={bold}>B</button>
 
       <textarea ref={ref} />
     </div>

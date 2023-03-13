@@ -1,19 +1,18 @@
-import * as React from "react";
-import { Button } from "@chakra-ui/react";
+import React, { type FC } from 'react';
+import { Button } from '@chakra-ui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { type IconDefinition } from '@fortawesome/fontawesome-common-types';
 
-export type ToolbarButtonProps = {
+export interface ToolbarButtonProps {
   onClick: () => void;
-};
+  icon?: IconDefinition;
+}
 
-export const ToolbarButton: React.FC<ToolbarButtonProps> = props => {
+export const ToolbarButton: FC<ToolbarButtonProps> = ({ onClick, icon, children }) => {
   return (
-    <Button
-      variant={"outline"}
-      size={"sm"}
-      color={"gray.600"}
-      onClick={props.onClick}
-    >
-      {props.children}
+    <Button variant={'outline'} size={'sm'} color={'gray.600'} onClick={onClick}>
+      {icon && <FontAwesomeIcon icon={icon} />}
+      {children}
     </Button>
   );
 };

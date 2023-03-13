@@ -16,5 +16,17 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-  }
+    "allowJs": true, // need for js files that included in "files" array
+    "noUncheckedIndexedAccess": true // https://stackoverflow.com/a/74467502/2179748
+  },
+  "files": [
+    ".eslintrc.js",
+    "jest.config.js",
+    "lint-staged.config.js",
+    "prettier.config.js",
+    "rollup.config.js",
+    "vite.config.js"
+  ], // need to use eslint for these files because eslint uses tsconfig.json
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

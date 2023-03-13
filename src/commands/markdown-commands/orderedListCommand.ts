@@ -1,8 +1,11 @@
-import { Command } from '../command';
+import { type Command } from '../command';
 import { makeList } from '../../helpers/listHelpers';
+import { commandsService } from '../commands-service';
 
-export const orderedListCommand: Command = {
+const orderedListCommand: Command = {
   execute: ({ initialState, textApi }) => {
     makeList(initialState, textApi, (item, index) => `${index + 1}. `);
   },
 };
+
+export const orderedList = commandsService.createCommandFn(orderedListCommand);

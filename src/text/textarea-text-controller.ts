@@ -1,39 +1,56 @@
-import { TextController, TextState } from '../types/CommandOptions';
-import * as React from 'react';
-import { SelectionRange } from '../types/SelectionRange';
+import { type SelectionRange, type TextController, type TextState } from '../types/TextController';
+import { type RefObject } from 'react';
 
 export class TextAreaTextController implements TextController {
-  textAreaRef: React.RefObject<HTMLTextAreaElement>;
+  textAreaRef: RefObject<HTMLTextAreaElement>;
 
-  constructor(textAreaRef: React.RefObject<HTMLTextAreaElement>) {
+  constructor(textAreaRef: RefObject<HTMLTextAreaElement>) {
     this.textAreaRef = textAreaRef;
   }
 
-  replaceSelection(text: string): TextState {
+  getTextArea() {
     const textArea = this.textAreaRef.current;
     if (!textArea) {
       throw new Error('TextAreaRef is not set');
     }
-    insertText(textArea, text);
-    return getStateFromTextArea(textArea);
+
+    return textArea;
   }
 
-  setSelectionRange(selection: SelectionRange): TextState {
-    const textArea = this.textAreaRef.current;
-    if (!textArea) {
-      throw new Error('TextAreaRef is not set');
-    }
+  setSelection(selection: SelectionRange): TextState {
+    const textArea = this.getTextArea();
+
     textArea.focus();
     textArea.selectionStart = selection.start;
     textArea.selectionEnd = selection.end;
     return getStateFromTextArea(textArea);
   }
 
+  replaceSelection(text: string): TextState {
+    const textArea = this.getTextArea();
+
+    insertText(textArea, text);
+    return getStateFromTextArea(textArea);
+  }
+
+  replaceText(text: string, newText: string): TextState {
+    const textArea = this.getTextArea();
+    textArea.value = textArea.value.replace(text, newText);
+
+    return getStateFromTextArea(textArea);
+  }
+
   getState(): TextState {
-    const textArea = this.textAreaRef.current;
-    if (!textArea) {
-      throw new Error('TextAreaRef is not set');
-    }
+    const textArea = this.getTextArea();
+
+    return getStateFromTextArea(textArea);
+  }
+
+  moveCursorToTheEnd() {
+    const textArea = this.getTextArea();
+
+    textArea.focus();
+    textArea.selectionEnd = textArea.selectionStart = textArea.value.length;
     return getStateFromTextArea(textArea);
   }
 }
@@ -74,8 +91,8 @@ export function insertText(input: HTMLTextAreaElement | HTMLInputElement, text: 
   // Webkit + Edge
   const isSuccess = document.execCommand('insertText', false, text);
   if (!isSuccess) {
-    const start = input.selectionStart || 0;
-    const end = input.selectionEnd || 0;
+    const start = input.selectionStart ?? 0;
+    const end = input.selectionEnd ?? 0;
     // Firefox (non-standard method)
     if (typeof (input as any).setRangeText === 'function') {
       (input as any).setRangeText(text);
@@ -97,7 +114,7 @@ export function insertText(input: HTMLTextAreaElement | HTMLInputElement, text: 
           const range = document.createRange();
 
           while (node && (startNode === null || endNode === null)) {
-            const nodeLength = node.nodeValue?.length || 0;
+            const nodeLength = node.nodeValue?.length ?? 0;
 
             // if start of the selection falls into current node
             if (start >= offset && start <= offset + nodeLength) {
@@ -148,11 +165,14 @@ function canManipulateViaTextNodes(input: HTMLTextAreaElement | HTMLInputElement
   if (input.nodeName !== 'TEXTAREA') {
     return false;
   }
+
   let browserSupportsTextareaTextNodes;
+
   if (typeof browserSupportsTextareaTextNodes === 'undefined') {
     const textarea = document.createElement('textarea');
     textarea.value = '1';
     browserSupportsTextareaTextNodes = !!textarea.firstChild;
   }
+
   return browserSupportsTextareaTextNodes;
 }

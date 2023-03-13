@@ -1,43 +1,23 @@
-import { TextController } from '../types/CommandOptions';
-import { CommandContext, CommandMap } from './command';
+import { type TextController } from '../types/TextController';
+import { type Command } from './command';
 
-export class CommandController<CommandName extends string> {
+export class CommandController {
   private readonly textController: TextController;
-  private readonly commandMap: CommandMap<CommandName>;
 
-  // Indicates whether there is a command currently executing
-  isExecuting: boolean = false;
-
-  constructor(textController: TextController, commandMap: CommandMap<CommandName>) {
+  constructor(textController: TextController) {
     this.textController = textController;
-    this.commandMap = commandMap;
   }
 
-  async executeCommand(commandName: CommandName, context?: CommandContext): Promise<void> {
-    if (this.isExecuting) {
-      // The simplest thing to do is to ignore commands while
-      // there is already a command executing.
-      // The alternative would be to queue commands
-      // but there is no guarantee that the state after one command executes will still be compatible
-      // with the next one. In fact, it is likely not to be.
-      return;
-    }
-
-    const command = this.commandMap[commandName];
-
-    if (!command) {
-      throw new Error(`Cannot execute command. Command not found: ${commandName}`);
-    }
-
+  executeCommand<CommandContext = void>(command: Command<CommandContext>, context: CommandContext) {
     const executeOptions = {
       initialState: this.textController.getState(),
       textApi: this.textController,
     };
 
-    if (command.shouldUndo?.(executeOptions) && command?.undo) {
+    if (command.undo && command.shouldUndo?.(executeOptions)) {
       command.undo(executeOptions);
     } else {
-      await command.execute(executeOptions);
+      command.execute(executeOptions, context);
     }
   }
 }

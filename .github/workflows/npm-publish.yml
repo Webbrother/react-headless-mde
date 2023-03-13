@@ -4,8 +4,11 @@
 name: Publish
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - 'main'
+#  release:
+#    types: [created]
 
 jobs:
   build-and-publish:
@@ -17,7 +20,7 @@ jobs:
           node-version: 18
           registry-url: 'https://registry.npmjs.org'
       - run: npm install
-      - run: npm build
+      - run: npm run build
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

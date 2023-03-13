@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { Command } from '../command';
+import { type Command } from '../command';
 import {
   getCharactersAfterSelection,
   getCharactersBeforeSelection,
   getSelectedText,
   selectWord,
 } from '../../helpers/textHelpers';
+import { commandsService } from '../commands-service';
 
-export const italicCommand: Command = {
+const italicCommand: Command = {
   shouldUndo: options => {
     return (
       getCharactersBeforeSelection(options.initialState, 1) === '*' &&
@@ -20,25 +20,27 @@ export const italicCommand: Command = {
       text: initialState.text,
       selection: initialState.selection,
     });
-    const state1 = textApi.setSelectionRange(newSelectionRange);
+    const state1 = textApi.setSelection(newSelectionRange);
     // Replaces the current selection with the italic mark up
     const state2 = textApi.replaceSelection(`*${getSelectedText(state1)}*`);
     // Adjust the selection to not contain the *
-    textApi.setSelectionRange({
+    textApi.setSelection({
       start: state2.selection.end - 1 - getSelectedText(state1).length,
       end: state2.selection.end - 1,
     });
   },
   undo: ({ initialState, textApi }) => {
     const text = getSelectedText(initialState);
-    textApi.setSelectionRange({
+    textApi.setSelection({
       start: initialState.selection.start - 1,
       end: initialState.selection.end + 1,
     });
     textApi.replaceSelection(text);
-    textApi.setSelectionRange({
+    textApi.setSelection({
       start: initialState.selection.start - 1,
       end: initialState.selection.end - 1,
     });
   },
 };
+
+export const italic = commandsService.createCommandFn(italicCommand);

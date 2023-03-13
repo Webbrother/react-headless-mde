@@ -29,7 +29,7 @@ const attachmentCommand: Command<AttachmentCommandContext> = {
 
     fileUrlPromise
       .then(url => {
-        const fileLinkString = `![${fileName}…](${url})`;
+        const fileLinkString = `![${fileName}](${url})`;
 
         if (textApi.getState().text.includes(uploadingString)) {
           textApi.replaceText(uploadingString, fileLinkString);

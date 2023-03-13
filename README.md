@@ -34,6 +34,12 @@ export const MarkdownEditor = () => {
 - bold
 - italic
 - strikethrough
+- headingLevel1
+- headingLevel2
+- headingLevel3
+- headingLevel4
+- headingLevel5
+- headingLevel6
 - link
 - quote
 - code
@@ -42,12 +48,6 @@ export const MarkdownEditor = () => {
 - orderedList
 - unorderedList
 - image
-- headingLevel1
-- headingLevel2
-- headingLevel3
-- headingLevel4
-- headingLevel5
-- headingLevel6
 - attachment
 
 ## Todo

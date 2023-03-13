@@ -50,10 +50,11 @@ export const MarkdownEditor = () => {
 
 ## Todo
 
-- Check execution on SSR (For example, Next.js) and, if necessary, regenerate eslint config, taking into account execution on node.js
-- Add to awesome-react-headless-components on stable version https://github.com/jxom/awesome-react-headless-components
-- peerDependencies React?
 - heading undo
+- undo/redo
+- Check execution on SSR (For example, Next.js) and, if necessary, regenerate eslint config, taking into account execution on node.js
+- peerDependencies React?
+  PR's are welcome!
 
 ### Third party
 
@@ -61,7 +62,7 @@ export const MarkdownEditor = () => {
 
 ### XSS concerns
 
-React-mde-headless does not automatically sanitize the HTML preview. If your using Showdown,
+React-mde-headless does not automatically sanitize the HTML preview. If you are using Showdown,
 this has been taken from [their documentation](<https://github.com/showdownjs/showdown/wiki/Markdown's-XSS-Vulnerability-(and-how-to-mitigate-it)>):
 
 > Cross-side scripting is a well known technique to gain access to private information of the users

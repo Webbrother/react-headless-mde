@@ -1,18 +1,12 @@
-import { TextController, TextState } from '../types/CommandOptions';
+import { type TextController, type TextState } from '../types/TextController';
 
 export interface ExecuteOptions {
   initialState: TextState;
   textApi: TextController;
 }
 
-export interface Command {
+export interface Command<CommandContext = void> {
+  execute: (options: ExecuteOptions, context: CommandContext) => void;
   shouldUndo?: (options: Pick<ExecuteOptions, 'initialState'>) => boolean;
-  execute: (options: ExecuteOptions) => void;
   undo?: (options: ExecuteOptions) => void;
 }
-
-export interface CommandContext {
-  type: string;
-}
-
-export type CommandMap<CommandName extends string> = Record<CommandName, Command>;

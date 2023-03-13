@@ -24,8 +24,8 @@ const attachmentCommand: Command<AttachmentCommandContext> = {
       }),
     );
 
-    const uploadingString = `![Uploading ${fileName}…]()`;
-    textApi.replaceSelection(' ' + uploadingString);
+    const uploadingString = `![Uploading ${fileName}]()`;
+    textApi.replaceSelection(uploadingString);
 
     fileUrlPromise
       .then(url => {

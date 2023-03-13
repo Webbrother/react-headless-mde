@@ -54,7 +54,8 @@ export const MarkdownEditor = () => {
 - undo/redo
 - Check execution on SSR (For example, Next.js) and, if necessary, regenerate eslint config, taking into account execution on node.js
 - peerDependencies React?
-  PR's are welcome!
+
+PR's are welcome!
 
 ### Third party
 

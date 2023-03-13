@@ -1,4 +1,4 @@
-import { type SelectionRange, type TextState } from '../types/CommandOptions';
+import { type SelectionRange, type TextState } from '../types/TextController';
 import { type AlterLineFunction } from './listHelpers';
 
 // A list of helpers for manipulating Markdown text.

@@ -1,27 +1,50 @@
-/*
-1. Вставить по курсору строку "![Uploading test 1.jpg…]()"
-
-2. Т.к. юзер может менять текст в процессе загрузки найти эту строку и заменить на:
- ![test 2](https://user-images.githubusercontent.com/8310289/224096504-d9ad96ad-916e-482e-a6e1-a89146992ec2.jpg)
- file name   url
-
-Если строка не найдена вставить ссылку в конец через пустую строку
-
-Предусмотреть обработку ответа с бэка. Библиотека не знает ДТО ответа.
- */
-
 import { type Command } from '../command';
 import { selectAfterWord } from '../../helpers/textHelpers';
+import { commandsService } from '../commands-service';
 
-export const attachmentCommand: Command = {
-  execute({ initialState, textApi }) {
-    // Replaces the current selection with the empty selection and sets the position after word
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const state1 = textApi.setSelectionRange(
+interface AttachmentCommandContext {
+  fileName: string;
+  fileUrlPromise: Promise<string>;
+}
+
+// attachmentCommand does to following:
+// 1. Sets cursor to the end of word
+// 2. Inserts string "![Uploading test 1.jpg…]()"
+// 3. When request is fulfilled replace "![Uploading test 1.jpg…]()" with real markdown url
+// or add the markdown url to the end of text
+// 4. If request is failed delete "![Uploading test 1.jpg…]()" and console.error
+const attachmentCommand: Command<AttachmentCommandContext> = {
+  execute({ initialState, textApi }, { fileName, fileUrlPromise }) {
+    // Replaces the current selection with the empty selection
+    // and sets the cursor position to the end of the word
+    textApi.setSelection(
       selectAfterWord({
         text: initialState.text,
         selection: initialState.selection,
       }),
     );
+
+    const uploadingString = `![Uploading ${fileName}…]()`;
+    textApi.replaceSelection(' ' + uploadingString);
+
+    fileUrlPromise
+      .then(url => {
+        const fileLinkString = `![${fileName}…](${url})`;
+
+        if (textApi.getState().text.includes(uploadingString)) {
+          textApi.replaceText(uploadingString, fileLinkString);
+        } else {
+          textApi.moveCursorToTheEnd();
+          textApi.replaceSelection(`\n${fileLinkString}`);
+        }
+      })
+      .catch(error => {
+        if (textApi.getState().text.includes(uploadingString)) {
+          textApi.replaceText(uploadingString, '');
+        }
+        console.error(error);
+      });
   },
 };
+
+export const attachment = commandsService.createCommandFn<AttachmentCommandContext>(attachmentCommand);

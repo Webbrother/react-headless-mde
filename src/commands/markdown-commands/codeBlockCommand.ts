@@ -1,29 +1,30 @@
-import { Command } from '../command';
+import { type Command } from '../command';
 import {
   getBreaksNeededForEmptyLineAfter,
   getBreaksNeededForEmptyLineBefore,
   getSelectedText,
   selectWord,
 } from '../../helpers/textHelpers';
+import { commandsService } from '../commands-service';
 
-export const codeBlockCommand: Command = {
-  execute: async ({ textApi, initialState }) => {
+const codeBlockCommand: Command = {
+  execute: ({ textApi, initialState }) => {
     // Adjust the selection to encompass the whole word if the caret is inside one
     const newSelectionRange = selectWord({
       text: initialState.text,
       selection: initialState.selection,
     });
-    const state1 = textApi.setSelectionRange(newSelectionRange);
+    const state1 = textApi.setSelection(newSelectionRange);
 
     // when there's no breaking line
-    if (getSelectedText(state1).indexOf('\n') === -1) {
+    if (!getSelectedText(state1).includes('\n')) {
       textApi.replaceSelection(`\`${getSelectedText(state1)}\``);
       // Adjust the selection to not contain the **
 
       const selectionStart = state1.selection.start + 1;
       const selectionEnd = selectionStart + getSelectedText(state1).length;
 
-      textApi.setSelectionRange({
+      textApi.setSelection({
         start: selectionStart,
         end: selectionEnd,
       });
@@ -41,9 +42,11 @@ export const codeBlockCommand: Command = {
     const selectionStart = state1.selection.start + breaksBeforeCount + 4;
     const selectionEnd = selectionStart + getSelectedText(state1).length;
 
-    textApi.setSelectionRange({
+    textApi.setSelection({
       start: selectionStart,
       end: selectionEnd,
     });
   },
 };
+
+export const codeBlock = commandsService.createCommandFn(codeBlockCommand);

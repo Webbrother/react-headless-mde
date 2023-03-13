@@ -1,67 +1,51 @@
-import * as React from "react";
-import ReactDOM from "react-dom";
-import { Box, ChakraProvider, HStack, Textarea } from "@chakra-ui/react";
-import { headingLevel1Command, useTextAreaMarkdownEditor } from "../src";
-import { faBold, faItalic, faCode, faHeading } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { boldCommand, codeCommand, italicCommand } from "../src";
-import { ToolbarButton } from "./toolbar-button";
+import * as React from 'react';
+import ReactDOM from 'react-dom';
+import { Box, ChakraProvider, HStack, Textarea } from '@chakra-ui/react';
+import { faBold, faItalic, faCode, faHeading } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { attachment, bold, code, headingLevel1, italic, useTextAreaMarkdownEditor } from '../src';
+import { ToolbarButton } from './toolbar-button';
 
-export type DemoProps = {};
-
-export const Demo: React.FunctionComponent<DemoProps> = () => {
-  const { ref, commandController } = useTextAreaMarkdownEditor({
-    commandMap: {
-      bold: boldCommand,
-      italic: italicCommand,
-      code: codeCommand,
-      headingLevel1: headingLevel1Command
-    }
+const uploadMock = async () =>
+  await new Promise<string>(resolve => {
+    setTimeout(() => {
+      resolve('https://google.com');
+    }, 5000);
   });
+
+export const Demo = () => {
+  const { ref } = useTextAreaMarkdownEditor();
 
   return (
     <ChakraProvider>
       <Box p={3}>
         <HStack py={2}>
-          <ToolbarButton
-            onClick={async () => {
-              await commandController.executeCommand("bold");
-            }}
-          >
+          <ToolbarButton onClick={bold}>
             <FontAwesomeIcon icon={faBold} />
           </ToolbarButton>
-          <ToolbarButton
-            onClick={async () => {
-              await commandController.executeCommand("italic");
-            }}
-          >
+          <ToolbarButton onClick={italic}>
             <FontAwesomeIcon icon={faItalic} />
           </ToolbarButton>
-          <ToolbarButton
-            onClick={async () => {
-              await commandController.executeCommand("code");
-            }}
-          >
+          <ToolbarButton onClick={code}>
             <FontAwesomeIcon icon={faCode} />
           </ToolbarButton>
-          <ToolbarButton
-            onClick={async () => {
-              await commandController.executeCommand("headingLevel1");
-            }}
-          >
+          <ToolbarButton onClick={headingLevel1}>
             <FontAwesomeIcon icon={faHeading} />
           </ToolbarButton>
+          <ToolbarButton
+            onClick={() => {
+              attachment({ fileName: 'file-name', fileUrlPromise: uploadMock() });
+            }}
+          >
+            +
+          </ToolbarButton>
         </HStack>
-        <Textarea
-          ref={ref}
-          placeholder="I'm a markdown editor"
-          fontFamily={"monospace"}
-        />
+        <Textarea ref={ref} placeholder="I'm a markdown editor" fontFamily={'monospace'} />
       </Box>
     </ChakraProvider>
   );
 };
 
-ReactDOM.render(<Demo />, document.getElementById("root"));
+ReactDOM.render(<Demo />, document.getElementById('root'));
 
 export default Demo;

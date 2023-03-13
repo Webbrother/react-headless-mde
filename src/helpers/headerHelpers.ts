@@ -1,4 +1,4 @@
-import { TextController, TextState } from '../types/CommandOptions';
+import { type TextController, type TextState } from '../types/TextController';
 import { getSelectedText, selectWord } from './textHelpers';
 
 export function setHeader(initialState: TextState, api: TextController, prefix: string) {
@@ -7,11 +7,11 @@ export function setHeader(initialState: TextState, api: TextController, prefix: 
     text: initialState.text,
     selection: initialState.selection,
   });
-  const state1 = api.setSelectionRange(newSelectionRange);
+  const state1 = api.setSelection(newSelectionRange);
   // Add the prefix to the selection
   const state2 = api.replaceSelection(`${prefix}${getSelectedText(state1)}`);
   // Adjust the selection to not contain the prefix
-  api.setSelectionRange({
+  api.setSelection({
     start: state2.selection.end - getSelectedText(state1).length,
     end: state2.selection.end,
   });

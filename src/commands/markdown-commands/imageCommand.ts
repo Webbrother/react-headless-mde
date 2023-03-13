@@ -1,10 +1,11 @@
 import { type Command } from '../command';
 import { getSelectedText, selectWord } from '../../helpers/textHelpers';
+import { commandsService } from '../commands-service';
 
-export const imageCommand: Command = {
+const imageCommand: Command = {
   execute: ({ initialState, textApi }) => {
     // Replaces the current selection with the whole word selected
-    const state1 = textApi.setSelectionRange(
+    const state1 = textApi.setSelection(
       selectWord({
         text: initialState.text,
         selection: initialState.selection,
@@ -17,9 +18,11 @@ export const imageCommand: Command = {
     textApi.replaceSelection(`![](${imageTemplate})`);
 
     // Adjust the selection to not contain the **
-    textApi.setSelectionRange({
+    textApi.setSelection({
       start: state1.selection.start + 4,
       end: state1.selection.start + 4 + imageTemplate.length,
     });
   },
 };
+
+export const image = commandsService.createCommandFn(imageCommand);

@@ -12,27 +12,15 @@ React-mde-headless has no 3rd party dependencies.
 ## Using
 
 ```jsx
-import { boldCommand, italicCommand, linkCommand, useTextAreaMarkdownEditor } from 'react-mde-headless';
+import { bold, italic, link, useTextAreaMarkdownEditor } from 'react-mde-headless';
 
 export const MarkdownEditor = () => {
-  const { ref, commandController } = useTextAreaMarkdownEditor({
-    commandMap: {
-      bold: boldCommand,
-      italic: italicCommand,
-      link: linkCommand,
-    },
-  });
+  const { ref } = useTextAreaMarkdownEditor();
 
   return (
     <div className={'mb-4'}>
       <div className={'mb-3 gap-1 flex flex-wrap'}>
-        <button
-          onClick={() => {
-            commandController.executeCommand('bold');
-          }}
-        >
-          B
-        </button>
+        <button onClick={bold}>B</button>
       </div>
 
       <textarea ref={ref} />
@@ -41,10 +29,33 @@ export const MarkdownEditor = () => {
 };
 ```
 
+## Supported commands
+
+- bold
+- italic
+- strikethrough
+- link
+- quote
+- code
+- codeBlock
+- checkedList
+- orderedList
+- unorderedList
+- image
+- headingLevel1
+- headingLevel2
+- headingLevel3
+- headingLevel4
+- headingLevel5
+- headingLevel6
+- attachment
+
 ## Todo
 
 - Check execution on SSR (For example, Next.js) and, if necessary, regenerate eslint config, taking into account execution on node.js
 - Add to awesome-react-headless-components on stable version https://github.com/jxom/awesome-react-headless-components
+- peerDependencies React?
+- heading undo
 
 ### Third party
 

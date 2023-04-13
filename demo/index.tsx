@@ -3,13 +3,15 @@ import ReactDOM from 'react-dom';
 import { Box, ChakraProvider, HStack, Textarea } from '@chakra-ui/react';
 import { faBold, faItalic, faCode, faHeading, faImage, faLink } from '@fortawesome/free-solid-svg-icons';
 import {
+  // hook
+  useTextAreaMarkdownEditor,
+  // commands
   boldCommand,
   codeCommand,
   codeBlockCommand,
   headingLevel1Command,
   italicCommand,
   strikethroughCommand,
-  useTextAreaMarkdownEditor,
   quoteCommand,
   checkedListCommand,
   orderedListCommand,
@@ -19,6 +21,7 @@ import {
 } from '../src';
 import { ToolbarButton } from './toolbar-button';
 import ReactMarkdown from 'react-markdown';
+import ChakraUIRenderer from 'chakra-ui-markdown-renderer';
 
 export const Demo = () => {
   const { ref, commandController } = useTextAreaMarkdownEditor({
@@ -69,6 +72,12 @@ export const Demo = () => {
             }}
             icon={faCode}
           />
+          <ToolbarButton
+            onClick={() => {
+              commandController.executeCommand('codeBlock');
+            }}
+            icon={faCode}
+          />
 
           <ToolbarButton
             onClick={() => {
@@ -96,13 +105,6 @@ export const Demo = () => {
           >
             {'>'}
           </ToolbarButton>
-
-          <ToolbarButton
-            onClick={() => {
-              commandController.executeCommand('codeBlock');
-            }}
-            icon={faCode}
-          />
 
           <ToolbarButton
             onClick={() => {
@@ -138,7 +140,7 @@ export const Demo = () => {
         </HStack>
 
         {isPreview ? (
-          <ReactMarkdown>{ref.current?.value ?? ''}</ReactMarkdown>
+          <ReactMarkdown components={ChakraUIRenderer()}>{ref.current?.value ?? ''}</ReactMarkdown>
         ) : (
           <Textarea
             ref={ref}

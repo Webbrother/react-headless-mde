@@ -1,20 +1,14 @@
-import { type Command } from '../command';
+import { type ICommand } from '../../types/command';
 import {
   getBreaksNeededForEmptyLineAfter,
   getBreaksNeededForEmptyLineBefore,
   getSelectedText,
-  selectWord,
-} from '../../helpers/textHelpers';
-import { commandsService } from '../commands-service';
+} from '../../utils/selection-and-text';
 
-const codeBlockCommand: Command = {
-  execute: ({ textApi, initialState }) => {
+export const codeBlockCommand: ICommand = {
+  do: textApi => {
     // Adjust the selection to encompass the whole word if the caret is inside one
-    const newSelectionRange = selectWord({
-      text: initialState.text,
-      selection: initialState.selection,
-    });
-    const state1 = textApi.setSelection(newSelectionRange);
+    const state1 = textApi.selectWordByCursor();
 
     // when there's no breaking line
     if (!getSelectedText(state1).includes('\n')) {
@@ -48,5 +42,3 @@ const codeBlockCommand: Command = {
     });
   },
 };
-
-export const codeBlock = commandsService.createCommandFn(codeBlockCommand);

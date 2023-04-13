@@ -1,29 +1,33 @@
 import type React from 'react';
 import { useMemo, useRef } from 'react';
-import { CommandController } from '../commands/command-controller';
-import { TextAreaTextController } from '../text/textarea-text-controller';
-import { type TextController } from '../types/TextController';
-import { commandsService } from '../commands/commands-service';
+import { CommandController } from '../controllers/command-controller';
+import { TextareaController } from '../controllers/textarea-controller';
+import { type TextController } from '../types/text-controller';
+import { type CommandMap } from '../types/command';
 
-export interface UseTextAreaMarkdownEditorResult {
+export interface UseTextAreaMarkdownEditorResult<CommandName extends string> {
   ref: React.RefObject<HTMLTextAreaElement>;
   textController: TextController;
+  commandController: CommandController<CommandName>;
 }
 
-export function useTextAreaMarkdownEditor(): UseTextAreaMarkdownEditorResult {
+export interface UseTextAreaMarkdownEditorOptions<CommandName extends string> {
+  commandMap: CommandMap<CommandName>;
+}
+
+export function useTextAreaMarkdownEditor<CommandName extends string>(
+  options: UseTextAreaMarkdownEditorOptions<CommandName>,
+): UseTextAreaMarkdownEditorResult<CommandName> {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  const textController = useMemo(() => {
-    const textAreaController = new TextAreaTextController(textAreaRef);
-    const commandController = new CommandController(textAreaController);
+  return useMemo(() => {
+    const textController = new TextareaController(textAreaRef);
+    const commandController = new CommandController(textController, options.commandMap);
 
-    commandsService.init(commandController, textAreaController);
-
-    return textAreaController;
+    return {
+      ref: textAreaRef,
+      textController,
+      commandController,
+    };
   }, [textAreaRef]);
-
-  return {
-    textController,
-    ref: textAreaRef,
-  };
 }

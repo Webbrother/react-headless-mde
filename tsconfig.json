@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     // Default
-    "target": "es5",
+    "target": "es6",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -27,6 +27,6 @@
     "rollup.config.js",
     "vite.config.js"
   ], // need to use eslint for these files because eslint uses tsconfig.json
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"],
   "exclude": ["node_modules"]
 }

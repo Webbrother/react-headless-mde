@@ -1,9 +1,9 @@
-import { type TextController, type TextState } from '../types/TextController';
-import { getSelectedText, selectWord } from './textHelpers';
+import { type TextController, type TextState } from '../types/text-controller';
+import { getSelectedText, getWordSelection } from './selection-and-text';
 
 export function setHeader(initialState: TextState, api: TextController, prefix: string) {
   // Adjust the selection to encompass the whole word if the caret is inside one
-  const newSelectionRange = selectWord({
+  const newSelectionRange = getWordSelection({
     text: initialState.text,
     selection: initialState.selection,
   });

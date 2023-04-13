@@ -1,15 +1,15 @@
-import { type SelectionRange, type TextState } from '../types/TextController';
-import { type AlterLineFunction } from './listHelpers';
+import { type SelectionRange, type TextState } from '../types/text-controller';
+import { type AlterLineFunction } from './list';
 
 // A list of helpers for manipulating Markdown text.
 // These helpers do not interface with a textarea.
 
-// Check if symbol is "space" or "new line"
-// c is optional because we pass a char by index,
+// Check if char is "space" or "new line".
+// Char is optional because we pass a char by index,
 // and theoretically index can be outside the string range. See text[i - 1] and text[i].
-const isWordDelimiter = (c?: string): boolean => !!c && (c === ' ' || c.charCodeAt(0) === 10);
+const isWordDelimiter = (char?: string): boolean => !!char && (char === ' ' || char.charCodeAt(0) === 10);
 
-export function getSurroundingWord(text: string, position: number): SelectionRange {
+const getSurroundingSelection = (text: string, position: number): SelectionRange => {
   if (text.length === 0) throw Error("Argument 'text' should be truthy");
 
   // leftIndex is initialized to 0 because if selection is 0, it won't even enter the iteration
@@ -34,25 +34,24 @@ export function getSurroundingWord(text: string, position: number): SelectionRan
   }
 
   return { start, end };
-}
+};
 
 // If the cursor is inside a word and (selection.start === selection.end)
 // returns a new Selection where the whole word is selected
-export function selectWord({ text, selection }: TextState): SelectionRange {
+export function getWordSelection({ text, selection }: TextState): SelectionRange {
   if (text.length !== 0 && selection.start === selection.end) {
     // the user is pointing to a word
-    return getSurroundingWord(text, selection.start);
+    return getSurroundingSelection(text, selection.start);
   }
 
   return selection;
 }
 
-// If the cursor is inside a word (selection.start === selection.end) or there is a selection
-// returns a new Selection where (selection.start === selection.end) but the position is after word
+// Returns a new Selection where (selection.start === selection.end) but the position is after word
 export function selectAfterWord({ text, selection }: TextState): SelectionRange {
   if (text.length !== 0) {
     // the user is pointing to a word
-    const { end } = getSurroundingWord(text, selection.end);
+    const { end } = getSurroundingSelection(text, selection.end);
 
     return {
       start: end,
@@ -68,7 +67,7 @@ export function selectAfterWord({ text, selection }: TextState): SelectionRange 
 export function getBreaksNeededForEmptyLineBefore(text = '', startPosition: number): number {
   if (startPosition === 0) return 0;
 
-  // rules:
+  // Rules:
   // - If we're in the first line, no breaks are needed
   // - Otherwise there must be 2 breaks before the previous character. Depending on how many breaks exist already, we
   //      may need to insert 0, 1 or 2 breaks
@@ -95,7 +94,7 @@ export function getBreaksNeededForEmptyLineBefore(text = '', startPosition: numb
 export function getBreaksNeededForEmptyLineAfter(text = '', startPosition: number): number {
   if (startPosition === text.length - 1) return 0;
 
-  // rules:
+  // Rules:
   // - If we're in the first line, no breaks are needed
   // - Otherwise there must be 2 breaks before the previous character. Depending on how many breaks exist already, we
   //      may need to insert 0, 1 or 2 breaks
@@ -123,11 +122,11 @@ export function getSelectedText(textSection: TextState): string {
   return textSection.text.slice(textSection.selection.start, textSection.selection.end);
 }
 
-export function getCharactersBeforeSelection(textState: TextState, characters: number): string {
+export function getStringBeforeSelection(textState: TextState, characters: number): string {
   return textState.text.slice(textState.selection.start - characters, textState.selection.start);
 }
 
-export function getCharactersAfterSelection(textState: TextState, characters: number): string {
+export function getStringAfterSelection(textState: TextState, characters: number): string {
   return textState.text.slice(textState.selection.end, textState.selection.end + characters);
 }
 

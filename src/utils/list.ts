@@ -1,18 +1,18 @@
-import { type TextController, type TextState } from '../types/TextController';
+import { type TextController, type TextState } from '../types/text-controller';
 
 import {
   getBreaksNeededForEmptyLineAfter,
   getBreaksNeededForEmptyLineBefore,
   getSelectedText,
   insertBeforeEachLine,
-  selectWord,
-} from './textHelpers';
+  getWordSelection,
+} from './selection-and-text';
 
 export type AlterLineFunction = (line: string, index: number) => string;
 
 export function makeList(state0: TextState, textController: TextController, insertBefore: string | AlterLineFunction) {
   // Adjust the selection to encompass the whole word if the caret is inside one
-  const newSelectionRange = selectWord({
+  const newSelectionRange = getWordSelection({
     text: state0.text,
     selection: state0.selection,
   });

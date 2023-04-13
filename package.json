@@ -1,6 +1,6 @@
 {
   "name": "react-headless-mde",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "React Headless Markdown Editor",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -48,6 +48,7 @@
     "@typescript-eslint/eslint-plugin": "5.54.1",
     "@vitejs/plugin-react": "^1.3.0",
     "add": "^2.0.6",
+    "chakra-ui-markdown-renderer": "^4.1.0",
     "cross-env": "^6.0.3",
     "eslint": "8.35.0",
     "eslint-config-prettier": "8.7.0",

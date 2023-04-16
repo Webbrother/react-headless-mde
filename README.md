@@ -59,22 +59,23 @@ export const MarkdownEditor = () => {
 - image
 - link
 
+## New API discussion [here](https://github.com/Webbrother/react-headless-mde/issues/22)
+
 ## Todo
 
-- heading undo
-- undo/redo
+- Undo/Redo commands
 - Check execution on SSR (For example, Next.js) and, if necessary, regenerate eslint config, taking into account execution on node.js
 - peerDependencies React?
-- undo for
+- Undo for
   - 1st priority
-    - all headings
-    - quote
-    - strikethrough
+    - all headers
+    - `quote`
+    - `strikethrough`
   - 2nd priority
-    - orderedList
-    - unorderedList
-    - checkedList
-    - codeBlock
+    - `orderedList`
+    - `unorderedList`
+    - `checkedList`
+    - `codeBlock`
 
 PR's are welcome!
 
@@ -93,7 +94,10 @@ this has been taken from [their documentation](<https://github.com/showdownjs/sh
 > you should filter any suspicious content coming from user input. Showdown does not include an
 > XSS filter, so you must provide your own. But be careful in how you do it…
 
-You might want to take a look at [showdown-xss-filter](https://github.com/VisionistInc/showdown-xss-filter).
+You might want to take a look at
+
+- [rehype-sanitize](https://github.com/rehypejs/rehype-sanitize).
+- [showdown-xss-filter](https://github.com/VisionistInc/showdown-xss-filter).
 
 ## Licence
 

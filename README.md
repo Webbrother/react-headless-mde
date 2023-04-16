@@ -12,7 +12,7 @@ React-mde-headless has **no 3rd party dependencies**.
 ## Using
 
 ```jsx
-import { boldCommand, italicCommand, linkCommand, useTextAreaMarkdownEditor } from 'react-mde-headless';
+import { boldCommand, italicCommand, linkCommand, useTextAreaMarkdownEditor } from 'react-headless-mde';
 
 export const MarkdownEditor = () => {
   const { ref, commandController } = useTextAreaMarkdownEditor({

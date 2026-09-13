@@ -1,6 +1,6 @@
 {
   "name": "react-headless-mde",
-  "version": "3.0.0",
+  "version": "3.0.0-beta1",
   "description": "React Headless Markdown Editor",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -38,7 +38,7 @@
     "markdown-editor",
     "headless"
   ],
-  "author": "Andre Pena",
+  "author": "Vitaliy Komarov",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/webbrother/react-headless-mde.git/issues"

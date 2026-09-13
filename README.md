@@ -3,7 +3,7 @@
 A simple yet powerful and extensible **React Markdown Editor** that aims to have feature parity with the Github Markdown editor.
 React-mde-headless has **no 3rd party dependencies**.
 
-## [Demo](https://codesandbox.io/s/competent-jepsen-qyz51q?file=/src/index.tsx)
+## [Demo](https://codesandbox.io/p/sandbox/competent-jepsen-qyz51q)
 
 ## Installing
 

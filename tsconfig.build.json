@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declarationDir": "dist/esm"
+  },
+  "exclude": ["node_modules", "src/test-utils.ts", "**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"]
+}

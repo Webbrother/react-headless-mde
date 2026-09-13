@@ -6,6 +6,7 @@ import { type IconDefinition } from '@fortawesome/fontawesome-common-types';
 export interface ToolbarButtonProps {
   onClick: () => void;
   icon?: IconDefinition;
+  children?: React.ReactNode;
 }
 
 export const ToolbarButton: FC<ToolbarButtonProps> = ({ onClick, icon, children }) => {

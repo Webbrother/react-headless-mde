@@ -1,52 +1,59 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useRef, useState } from 'react';
+import { createRoot } from 'react-dom/client';
 import { Box, ChakraProvider, HStack, Textarea } from '@chakra-ui/react';
-import { faBold, faItalic, faCode, faHeading, faImage, faLink } from '@fortawesome/free-solid-svg-icons';
+import { faBold, faItalic, faCode, faHeading, faImage, faLink, faUpload } from '@fortawesome/free-solid-svg-icons';
 import {
   // hook
   useTextAreaMarkdownEditor,
   // commands
-  boldCommand,
-  codeCommand,
-  codeBlockCommand,
-  headingLevel1Command,
-  italicCommand,
-  strikethroughCommand,
-  quoteCommand,
-  checkedListCommand,
-  orderedListCommand,
-  unorderedListCommand,
-  imageCommand,
-  linkCommand,
+  BoldCommand,
+  CodeCommand,
+  CodeBlockCommand,
+  HeadingLevel1Command,
+  ItalicCommand,
+  StrikethroughCommand,
+  QuoteCommand,
+  CheckedListCommand,
+  OrderedListCommand,
+  UnorderedListCommand,
+  ImageCommand,
+  LinkCommand,
 } from '../src';
 import { ToolbarButton } from './toolbar-button';
+import { AttachmentCommand } from './attachment-command';
+import { WrapTextCommand } from './wrap-text-command';
 import ReactMarkdown from 'react-markdown';
-import ChakraUIRenderer from 'chakra-ui-markdown-renderer';
+import { chakraMarkdownRenderer } from './markdown-renderer';
 
 export const Demo = () => {
-  const { ref, commandController } = useTextAreaMarkdownEditor({
+  const { ref, commands } = useTextAreaMarkdownEditor({
     commandMap: {
       // word logic
-      bold: boldCommand,
-      code: codeCommand,
-      codeBlock: codeBlockCommand,
-      italic: italicCommand,
-      strikethrough: strikethroughCommand,
+      bold: BoldCommand,
+      code: CodeCommand,
+      codeBlock: CodeBlockCommand,
+      italic: ItalicCommand,
+      strikethrough: StrikethroughCommand,
 
       // word complex
-      image: imageCommand,
-      link: linkCommand,
+      image: ImageCommand,
+      link: LinkCommand,
 
       // line logic
-      headingLevel1: headingLevel1Command,
-      quote: quoteCommand,
+      headingLevel1: HeadingLevel1Command,
+      quote: QuoteCommand,
 
       // list
-      orderedList: orderedListCommand,
-      unorderedList: unorderedListCommand,
-      checkedList: checkedListCommand,
+      orderedList: OrderedListCommand,
+      unorderedList: UnorderedListCommand,
+      checkedList: CheckedListCommand,
+
+      // command with a context (see demo/attachment-command.ts)
+      attachment: AttachmentCommand,
+      wrapText: WrapTextCommand,
     },
   });
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isPreview, setIsPreview] = useState(false);
   const [value, setValue] = useState('');
 
@@ -56,51 +63,85 @@ export const Demo = () => {
         <HStack py={2}>
           <ToolbarButton
             onClick={() => {
-              commandController.executeCommand('bold');
+              commands.bold();
             }}
             icon={faBold}
           />
           <ToolbarButton
             onClick={() => {
-              commandController.executeCommand('italic');
+              commands.italic();
             }}
             icon={faItalic}
           />
           <ToolbarButton
             onClick={() => {
-              commandController.executeCommand('code');
+              commands.code();
             }}
             icon={faCode}
           />
           <ToolbarButton
             onClick={() => {
-              commandController.executeCommand('codeBlock');
+              commands.codeBlock();
             }}
             icon={faCode}
           />
 
           <ToolbarButton
             onClick={() => {
-              commandController.executeCommand('image');
+              commands.image();
             }}
             icon={faImage}
           />
           <ToolbarButton
             onClick={() => {
-              commandController.executeCommand('link');
+              commands.link();
             }}
             icon={faLink}
           />
 
           <ToolbarButton
             onClick={() => {
-              commandController.executeCommand('headingLevel1');
+              fileInputRef.current?.click();
+            }}
+            icon={faUpload}
+          />
+          <input
+            type='file'
+            hidden
+            ref={fileInputRef}
+            onChange={e => {
+              const file = e.target.files?.[0];
+
+              if (file) {
+                // Fake upload: resolves with a random image URL after a short delay,
+                // so the `![Uploading...]()` placeholder is visible in the editor
+                // and the image actually shows up in the Preview tab.
+                // Calling `commands.attachment()` without the argument
+                // is a compile-time error (see issue #22).
+                const fakeUpload = new Promise<string>(resolve => {
+                  setTimeout(() => {
+                    // a random image URL, unique on every upload
+                    resolve(`https://picsum.photos/600/400?random=${Date.now()}`);
+                  }, 800);
+                });
+
+                commands.attachment(fakeUpload);
+              }
+
+              // allow picking the same file again
+              e.target.value = '';
+            }}
+          />
+
+          <ToolbarButton
+            onClick={() => {
+              commands.headingLevel1();
             }}
             icon={faHeading}
           />
           <ToolbarButton
             onClick={() => {
-              commandController.executeCommand('quote');
+              commands.quote();
             }}
           >
             {'>'}
@@ -108,7 +149,7 @@ export const Demo = () => {
 
           <ToolbarButton
             onClick={() => {
-              commandController.executeCommand('orderedList');
+              commands.orderedList();
             }}
           >
             ol
@@ -116,7 +157,7 @@ export const Demo = () => {
 
           <ToolbarButton
             onClick={() => {
-              commandController.executeCommand('unorderedList');
+              commands.unorderedList();
             }}
           >
             ul
@@ -124,10 +165,21 @@ export const Demo = () => {
 
           <ToolbarButton
             onClick={() => {
-              commandController.executeCommand('checkedList');
+              commands.checkedList();
             }}
           >
             xi
+          </ToolbarButton>
+
+          {/* A command with a simple context: wraps the word at the caret with the
+              given string on both sides. `commands.wrapText()` without the argument
+              is a compile-time error. */}
+          <ToolbarButton
+            onClick={() => {
+              commands.wrapText('!!!');
+            }}
+          >
+            !!!
           </ToolbarButton>
 
           <ToolbarButton
@@ -140,7 +192,7 @@ export const Demo = () => {
         </HStack>
 
         {isPreview ? (
-          <ReactMarkdown components={ChakraUIRenderer()}>{ref.current?.value ?? ''}</ReactMarkdown>
+          <ReactMarkdown components={chakraMarkdownRenderer()}>{ref.current?.value ?? ''}</ReactMarkdown>
         ) : (
           <Textarea
             ref={ref}
@@ -157,6 +209,10 @@ export const Demo = () => {
   );
 };
 
-ReactDOM.render(<Demo />, document.getElementById('root'));
+const rootElement = document.getElementById('root');
+
+if (rootElement) {
+  createRoot(rootElement).render(<Demo />);
+}
 
 export default Demo;

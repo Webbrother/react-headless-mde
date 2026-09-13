@@ -1,17 +1,20 @@
-import { type ICommand } from '../../types/command';
 import { getSelectedText } from '../../utils/selection-and-text';
+import { BaseCommand } from '../base-command';
 
-export const linkCommand: ICommand = {
-  do: textApi => {
+export class LinkCommand extends BaseCommand {
+  do() {
+    const textApi = this.textController;
+
     // Adjust the selection to encompass the whole word if the caret is inside one
     const wordSelectionState = textApi.selectWordByCursor();
 
-    // Replaces the current selection with the bold mark up
+    // Replaces the current selection with the link markup
     const state2 = textApi.replaceSelection(`[${getSelectedText(wordSelectionState)}](url)`);
-    // Adjust the selection to not contain the **
+
+    // Select the `url` placeholder so it can be replaced right away
     textApi.setSelection({
-      start: state2.selection.end - 6 - getSelectedText(wordSelectionState).length,
-      end: state2.selection.end - 6,
+      start: state2.selection.end - 4,
+      end: state2.selection.end - 1,
     });
-  },
-};
+  }
+}

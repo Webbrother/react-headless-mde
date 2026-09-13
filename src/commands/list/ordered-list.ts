@@ -1,9 +1,7 @@
-import { type ICommand } from '../../types/command';
-import { makeList } from '../../utils/list';
+import { ListCommand } from './list-command';
 
-export const orderedListCommand: ICommand = {
-  do: textApi => {
-    const initialState = textApi.getState();
-    makeList(initialState, textApi, (item, index) => `${index + 1}. `);
-  },
-};
+export class OrderedListCommand extends ListCommand {
+  protected getLinePrefix(_line: string, index: number) {
+    return `${index + 1}. `;
+  }
+}

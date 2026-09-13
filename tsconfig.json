@@ -24,7 +24,7 @@
     "jest.config.js",
     "lint-staged.config.js",
     "prettier.config.js",
-    "rollup.config.js",
+    "rollup.config.mjs",
     "vite.config.js"
   ], // need to use eslint for these files because eslint uses tsconfig.json
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"],

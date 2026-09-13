@@ -3,24 +3,24 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 
-const packageJson = require('./package.json');
-
 export default [
   {
     input: 'src/index.ts',
     output: [
       {
-        file: packageJson.main,
+        dir: 'dist',
+        entryFileNames: 'cjs/index.js',
         format: 'cjs',
         sourcemap: true,
       },
       {
-        file: packageJson.module,
+        dir: 'dist',
+        entryFileNames: 'esm/index.js',
         format: 'esm',
         sourcemap: true,
       },
     ],
-    plugins: [resolve(), commonjs(), typescript({ tsconfig: './tsconfig.json' })],
+    plugins: [resolve(), commonjs(), typescript({ tsconfig: './tsconfig.build.json' })],
     external: ['react', 'react-dom'],
   },
   {

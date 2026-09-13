@@ -13,6 +13,9 @@
     }
   },
   "sideEffects": false,
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {
     "react": ">=16.8.0"
   },
@@ -23,7 +26,7 @@
     "tsc": "tsc",
     "build": "rollup -c",
     "check-types": "tsc --noEmit",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "repository": {
     "type": "git",

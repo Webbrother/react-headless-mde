@@ -140,10 +140,6 @@ You might want to take a look at
 - [rehype-sanitize](https://github.com/rehypejs/rehype-sanitize).
 - [showdown-xss-filter](https://github.com/VisionistInc/showdown-xss-filter).
 
-## Licence
-
-React-mde-headless is [MIT licensed](https://github.com/andrerpena/react-mde/blob/master/LICENSE).
-
 ## About the authors
 
-Created by [André Pena](https://github.com/andrerpena). Maintained and developed by https://github.com/webbrother.
+The idea from [André Pena](https://github.com/andrerpena). Maintained and developed by Vitaliy Komarov https://github.com/webbrother.

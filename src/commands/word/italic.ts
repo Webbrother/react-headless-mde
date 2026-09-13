@@ -1,20 +1,6 @@
-import { type ICommand } from '../../types/command';
-import { getStringAfterSelection, getStringBeforeSelection } from '../../utils/selection-and-text';
+import { WrapCommand } from './wrap-command';
 
-export const italicCommand: ICommand = {
-  shouldUndo: textCtrl => {
-    const wordSelectionState = textCtrl.selectWordByCursor();
-
-    return (
-      getStringBeforeSelection(wordSelectionState, 1) === '*' && getStringAfterSelection(wordSelectionState, 1) === '*'
-    );
-  },
-
-  do(textCtrl) {
-    textCtrl.wrapSelection('*', '*');
-  },
-
-  undo(textCtrl) {
-    textCtrl.unwrapSelection(1, 1);
-  },
-};
+export class ItalicCommand extends WrapCommand {
+  protected prefix = '*';
+  protected suffix = '*';
+}

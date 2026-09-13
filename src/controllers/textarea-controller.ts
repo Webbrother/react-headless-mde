@@ -73,9 +73,9 @@ export class TextareaController implements TextController {
     // Replaces the current selection with new string
     const state2 = this.replaceSelection(`${prefix}${getSelectedText(state1)}${suffix}`);
 
-    // Adjust the selection to not contain the **
+    // Adjust the selection to not contain the prefix and suffix
     return this.setSelection({
-      start: state2.selection.end - prefix.length - getSelectedText(state1).length,
+      start: state2.selection.end - suffix.length - getSelectedText(state1).length,
       end: state2.selection.end - suffix.length,
     });
   }

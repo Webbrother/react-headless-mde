@@ -1,8 +1,9 @@
 import { type SelectionRange, type TextState } from '../types/text-controller';
-import { type AlterLineFunction } from './list';
 
 // A list of helpers for manipulating Markdown text.
 // These helpers do not interface with a textarea.
+
+export type AlterLineFunction = (line: string, index: number) => string;
 
 // Check if char is "space" or "new line".
 // Char is optional because we pass a char by index,
@@ -62,6 +63,17 @@ export function selectAfterWord({ text, selection }: TextState): SelectionRange 
   return selection;
 }
 
+// Expands the selection to cover the whole lines it touches:
+// the start moves to the beginning of the first line, the end — to the end of the last one
+export function getLineSelection({ text, selection }: TextState): SelectionRange {
+  let { start, end } = selection;
+
+  while (start > 0 && text[start - 1] !== '\n') start--;
+  while (end < text.length && text[end] !== '\n') end++;
+
+  return { start, end };
+}
+
 // Gets the number of line-breaks that would have to be inserted before the given 'startPosition'
 // to make sure there's an empty line between 'startPosition' and the previous text
 export function getBreaksNeededForEmptyLineBefore(text = '', startPosition: number): number {
@@ -86,7 +98,7 @@ export function getBreaksNeededForEmptyLineBefore(text = '', startPosition: numb
         return neededBreaks;
     }
   }
-  return isInFirstLine ? 0 : neededBreaks;
+  return isInFirstLine ? 0 : Math.max(0, neededBreaks);
 }
 
 // Gets the number of line-breaks that would have to be inserted after the given 'startPosition'
@@ -115,7 +127,7 @@ export function getBreaksNeededForEmptyLineAfter(text = '', startPosition: numbe
     }
   }
 
-  return isInLastLine ? 0 : neededBreaks;
+  return isInLastLine ? 0 : Math.max(0, neededBreaks);
 }
 
 export function getSelectedText(textSection: TextState): string {

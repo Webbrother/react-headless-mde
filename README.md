@@ -12,14 +12,14 @@ React-mde-headless has **no 3rd party dependencies**.
 ## Using
 
 ```jsx
-import { boldCommand, italicCommand, linkCommand, useTextAreaMarkdownEditor } from 'react-headless-mde';
+import { BoldCommand, ItalicCommand, LinkCommand, useTextAreaMarkdownEditor } from 'react-headless-mde';
 
 export const MarkdownEditor = () => {
-  const { ref, commandController } = useTextAreaMarkdownEditor({
+  const { ref, commands } = useTextAreaMarkdownEditor({
     commandMap: {
-      bold: boldCommand,
-      italic: italicCommand,
-      link: linkCommand,
+      bold: BoldCommand,
+      italic: ItalicCommand,
+      link: LinkCommand,
     },
   });
 
@@ -27,7 +27,7 @@ export const MarkdownEditor = () => {
     <div>
       <button
         onClick={() => {
-          commandController.executeCommand('bold');
+          commands.bold();
         }}
       >
         B
@@ -38,6 +38,47 @@ export const MarkdownEditor = () => {
   );
 };
 ```
+
+## Custom commands
+
+A command is a class extending `BaseCommand`. The hook instantiates it with the editor's
+`TextController` and returns a typed executor. If a command needs a context
+(e.g. an `attachment` command accepting an upload promise), extend `BaseCommand<Context>`
+— the executor then requires the context argument:
+
+```tsx
+import { BaseCommand, useTextAreaMarkdownEditor } from 'react-headless-mde';
+
+class AttachmentCommand extends BaseCommand<Promise<string>> {
+  async do(upload: Promise<string>) {
+    const url = await upload;
+    this.textController.replaceSelection(`![](${url})`);
+  }
+}
+
+export const MarkdownEditor = () => {
+  const { ref, commands } = useTextAreaMarkdownEditor({
+    commandMap: {
+      attachment: AttachmentCommand,
+      bold: BoldCommand,
+    },
+  });
+
+  commands.attachment(uploadPromise); // OK
+  commands.attachment(); // Type error: 1 argument expected
+  commands.bold(42); // Type error: 0 arguments expected
+
+  // ...
+};
+```
+
+Working examples of commands with a context live in
+[demo/attachment-command.ts](demo/attachment-command.ts) (`Promise<string>` context)
+and [demo/wrap-text-command.ts](demo/wrap-text-command.ts) (a simple `string` context,
+wraps the word at the caret with it on both sides), wired up in `demo/index.tsx`.
+
+For undoable commands implement `shouldUndo`/`undo` — the command is then toggled:
+executing it on already formatted text removes the formatting (see `WrapCommand`).
 
 ## Supported commands
 
@@ -59,18 +100,18 @@ export const MarkdownEditor = () => {
 - image
 - link
 
-## New API discussion [here](https://github.com/Webbrother/react-headless-mde/issues/22)
+## Command API
+
+Since v3 commands are classes (see [issue #22](https://github.com/Webbrother/react-headless-mde/issues/22)):
+the `commandMap` maps camelCase command names to command classes, and the hook returns
+strictly typed `commands` executors. The pre-v3 object-based API
+(`commandController.executeCommand('bold')`) was removed.
 
 ## Todo
 
-- Undo/Redo commands
+- Redo commands
 - Check execution on SSR (For example, Next.js) and, if necessary, regenerate eslint config, taking into account execution on node.js
-- peerDependencies React?
 - Undo for
-  - 1st priority
-    - all headers
-    - `quote`
-    - `strikethrough`
   - 2nd priority
     - `orderedList`
     - `unorderedList`
@@ -99,10 +140,6 @@ You might want to take a look at
 - [rehype-sanitize](https://github.com/rehypejs/rehype-sanitize).
 - [showdown-xss-filter](https://github.com/VisionistInc/showdown-xss-filter).
 
-## Licence
-
-React-mde-headless is [MIT licensed](https://github.com/andrerpena/react-mde/blob/master/LICENSE).
-
 ## About the authors
 
-Created by [André Pena](https://github.com/andrerpena). Maintained and developed by https://github.com/webbrother.
+The idea from [André Pena](https://github.com/andrerpena). Maintained and developed by Vitaliy Komarov https://github.com/webbrother.

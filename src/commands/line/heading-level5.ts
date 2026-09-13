@@ -1,10 +1,5 @@
-import { type ICommand } from '../../types/command';
-import { setHeader } from '../../utils/header';
+import { LinePrefixCommand } from './line-prefix-command';
 
-export const headingLevel5Command: ICommand = {
-  do: textCtrl => {
-    const initialState = textCtrl.getState();
-
-    setHeader(initialState, textCtrl, '##### ');
-  },
-};
+export class HeadingLevel5Command extends LinePrefixCommand {
+  protected prefix = '##### ';
+}

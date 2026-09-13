@@ -1,44 +1,42 @@
-import { type ICommand } from '../../types/command';
 import {
   getBreaksNeededForEmptyLineAfter,
   getBreaksNeededForEmptyLineBefore,
   getSelectedText,
 } from '../../utils/selection-and-text';
+import { BaseCommand } from '../base-command';
 
-export const codeBlockCommand: ICommand = {
-  do: textApi => {
+export class CodeBlockCommand extends BaseCommand {
+  do() {
+    const textApi = this.textController;
+
     // Adjust the selection to encompass the whole word if the caret is inside one
     const state1 = textApi.selectWordByCursor();
+    const selectedText = getSelectedText(state1);
 
-    // when there's no breaking line
-    if (!getSelectedText(state1).includes('\n')) {
-      textApi.replaceSelection(`\`${getSelectedText(state1)}\``);
-      // Adjust the selection to not contain the **
-
-      const selectionStart = state1.selection.start + 1;
-      const selectionEnd = selectionStart + getSelectedText(state1).length;
+    // when there's no breaking line — inline code
+    if (!selectedText.includes('\n')) {
+      textApi.replaceSelection(`\`${selectedText}\``);
 
       textApi.setSelection({
-        start: selectionStart,
-        end: selectionEnd,
+        start: state1.selection.start + 1,
+        end: state1.selection.start + 1 + selectedText.length,
       });
       return;
     }
 
     const breaksBeforeCount = getBreaksNeededForEmptyLineBefore(state1.text, state1.selection.start);
-    const breaksBefore = Array(breaksBeforeCount + 1).join('\n');
+    const breaksBefore = '\n'.repeat(breaksBeforeCount);
 
     const breaksAfterCount = getBreaksNeededForEmptyLineAfter(state1.text, state1.selection.end);
-    const breaksAfter = Array(breaksAfterCount + 1).join('\n');
+    const breaksAfter = '\n'.repeat(breaksAfterCount);
 
-    textApi.replaceSelection(`${breaksBefore}\`\`\`\n${getSelectedText(state1)}\n\`\`\`${breaksAfter}`);
+    textApi.replaceSelection(`${breaksBefore}\`\`\`\n${selectedText}\n\`\`\`${breaksAfter}`);
 
     const selectionStart = state1.selection.start + breaksBeforeCount + 4;
-    const selectionEnd = selectionStart + getSelectedText(state1).length;
 
     textApi.setSelection({
       start: selectionStart,
-      end: selectionEnd,
+      end: selectionStart + selectedText.length,
     });
-  },
-};
+  }
+}

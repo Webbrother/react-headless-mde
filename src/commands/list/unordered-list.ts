@@ -1,9 +1,7 @@
-import { type ICommand } from '../../types/command';
-import { makeList } from '../../utils/list';
+import { ListCommand } from './list-command';
 
-export const unorderedListCommand: ICommand = {
-  do: textApi => {
-    const initialState = textApi.getState();
-    makeList(initialState, textApi, '- ');
-  },
-};
+export class UnorderedListCommand extends ListCommand {
+  protected getLinePrefix() {
+    return '- ';
+  }
+}
